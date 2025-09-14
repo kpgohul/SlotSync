@@ -1,6 +1,7 @@
 package com.gohul.AuthServer.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gohul.AuthServer.constant.GenderType;
 import com.gohul.AuthServer.constant.SyncStatus;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
@@ -17,8 +18,8 @@ public class CustomerDto {
     private String email;
     @Min(value = 4, message = "Name should contain more than or equal to 4 characters.")
     private String name;
-    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be Male, Female, or Other.")
-    private String gender;
+    @Pattern(regexp = "^(MALE|FEMALE|OTHER)$", message = "Gender must be Male, Female, or Other.")
+    private GenderType gender;
     @Min(value = 18, message = "Customer should has more than 18+.")
     private int age;
     @JsonIgnore

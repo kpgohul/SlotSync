@@ -32,6 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void createCustomer(CustomerDto dto) {
+
         Optional<Customer> old = customerRepo.getByEmail(dto.getEmail());
         if(old.isPresent()) throw new ResourceAlreadyExistException("Customer", "Email", dto.getEmail());
         Authority authority = authorityRepo.findDistinctByName(defaultAuthority);
@@ -56,7 +57,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean deleteCustomerByEmail(String email) {
+    public void deleteCustomerByEmail(String email) {
        Customer customer = customerRepo.getByEmail(email)
                .orElseThrow(() -> new ResourceNotFoundException("Customer", "Email", email));
        customerRepo.deleteByEmail(email);
@@ -64,7 +65,6 @@ public class CustomerServiceImpl implements CustomerService {
                         .id(customer.getId())
                         .email(customer.getEmail())
                         .build());
-       return true;
     }
 
     @Override

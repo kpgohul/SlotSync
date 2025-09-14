@@ -8,7 +8,7 @@ public interface CustomerService {
 
     void resetCustomerPassword(CustomerDto dto);
 
-    boolean deleteCustomerByEmail(String email);
+    void deleteCustomerByEmail(String email);
 
     void updateCustomerSyncStatus(CustomerDto dto);
 
