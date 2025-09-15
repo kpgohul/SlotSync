@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.gohul</groupId>
 	<artifactId>AuthServer</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>v1</version>
 	<name>AuthServer</name>
 	<description>Basic Auth Server</description>
 	<url/>
@@ -88,6 +88,7 @@
 	</dependencies>
 
 	<build>
+        <finalName>spring-auth-server</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
