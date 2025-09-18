@@ -78,6 +78,7 @@ public class AuthServerConfig {
             throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/auth/api/register").permitAll()
                         .anyRequest().authenticated()
                 )
                 // Form login handles the redirect to the login page from the
@@ -93,7 +94,7 @@ public class AuthServerConfig {
 
         RegisteredClient AuthZCodeClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("AuthZCodeClient")
-                .clientSecret("{noop}OneDayOrDay")
+                .clientSecret("{noop}OneDayOrDay1")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
@@ -108,7 +109,7 @@ public class AuthServerConfig {
 
         RegisteredClient PKCEClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("PKCEClient")
-                .clientSecret("{noop}OneDayOrDay")
+                .clientSecret("{noop}OneDayOrDay2")
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)

@@ -3,8 +3,8 @@ spring:
     name: AuthServer
 
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:myUser}
-    username: kprahul
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:customerDB}
+    username: kprahul143
     password: kprahul143
     driver-class-name: org.postgresql.Driver
     hikari:
@@ -25,6 +25,8 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092
+    admin:
+      auto-create: true
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -35,7 +37,6 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "*"
-        spring.json.value.default.type: "*"
 
 custom-kafka:
   create-topic: create-event
@@ -43,7 +44,7 @@ custom-kafka:
   delete-topic: delete-event
 
 custom-authority:
-  default-customer-role: User
+  default-customer-role: USER
 
 logging:
   level:
