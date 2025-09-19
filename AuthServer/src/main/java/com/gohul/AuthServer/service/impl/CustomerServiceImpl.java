@@ -1,7 +1,8 @@
 package com.gohul.AuthServer.service.impl;
 
 import com.gohul.AuthServer.constant.SyncStatus;
-import com.gohul.AuthServer.dto.CustomerDto;
+import com.gohul.AuthServer.dto.CustomerCreateRequestDto;
+import com.gohul.AuthServer.dto.CustomerSyncUpdateRequestDto;
 import com.gohul.AuthServer.exception.ResourceAlreadyExistException;
 import com.gohul.AuthServer.exception.ResourceNotFoundException;
 import com.gohul.AuthServer.kafka.CustomerEventProducer;
@@ -31,7 +32,7 @@ public class CustomerServiceImpl implements CustomerService {
     private String defaultAuthority;
 
     @Override
-    public void createCustomer(CustomerDto dto) {
+    public void createCustomer(CustomerCreateRequestDto dto) {
 
         Optional<Customer> old = customerRepo.getByEmail(dto.getEmail());
         if(old.isPresent()) throw new ResourceAlreadyExistException("Customer", "Email", dto.getEmail());
@@ -49,28 +50,29 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public void resetCustomerPassword(CustomerDto dto) {
-       Customer customer = customerRepo.getByEmail(dto.getEmail())
-               .orElseThrow(() -> new ResourceNotFoundException("Customer", "Email", dto.getEmail()));
-       customer.setPassword(encoder.encode(dto.getPassword()));
-       customerRepo.save(customer);
+    public void resetCustomerPassword(CustomerCreateRequestDto dto) {
+//       Customer customer = customerRepo.getByEmail(dto.getEmail())
+//               .orElseThrow(() -> new ResourceNotFoundException("Customer", "Email", dto.getEmail()));
+//       customer.setPassword(encoder.encode(dto.getPassword()));
+//       customerRepo.save(customer);
     }
 
     @Override
     public void deleteCustomerByEmail(String email) {
-       Customer customer = customerRepo.getByEmail(email)
-               .orElseThrow(() -> new ResourceNotFoundException("Customer", "Email", email));
-       customerRepo.deleteByEmail(email);
-       producer.sendMessageToDeleteCustomer(CustomerDto.builder()
-                        .id(customer.getId())
-                        .email(customer.getEmail())
-                        .build());
+//       Customer customer = customerRepo.getByEmail(email)
+//               .orElseThrow(() -> new ResourceNotFoundException("Customer", "Email", email));
+//       customerRepo.deleteByEmail(email);
+//       producer.sendMessageToDeleteCustomer(CustomerDto.builder()
+//                        .id(customer.getId())
+//                        .email(customer.getEmail())
+//                        .build());
     }
 
     @Override
-    public void updateCustomerSyncStatus(CustomerDto dto) {
+    public void updateCustomerSyncStatus(CustomerSyncUpdateRequestDto dto) {
         Customer syncedCustomer = customerRepo.getByEmail(dto.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Customer", "Email", dto.getEmail()));
+        syncedCustomer.setId(dto.getId());
         syncedCustomer.setSyncStatus(dto.getSyncStatus());
         customerRepo.save(syncedCustomer);
     }

@@ -1,15 +1,16 @@
 package com.gohul.AuthServer.service;
 
-import com.gohul.AuthServer.dto.CustomerDto;
+import com.gohul.AuthServer.dto.CustomerCreateRequestDto;
+import com.gohul.AuthServer.dto.CustomerSyncUpdateRequestDto;
 
 public interface CustomerService {
 
-    void createCustomer(CustomerDto dto);
+    void createCustomer(CustomerCreateRequestDto dto);
 
-    void resetCustomerPassword(CustomerDto dto);
+    void resetCustomerPassword(CustomerCreateRequestDto dto);
 
     void deleteCustomerByEmail(String email);
 
-    void updateCustomerSyncStatus(CustomerDto dto);
+    void updateCustomerSyncStatus(CustomerSyncUpdateRequestDto dto);
 
 }

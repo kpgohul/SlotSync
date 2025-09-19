@@ -1,6 +1,6 @@
 package com.gohul.AuthServer.kafka;
 
-import com.gohul.AuthServer.dto.CustomerDto;
+import com.gohul.AuthServer.dto.CustomerCreateRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,26 +20,26 @@ public class CustomerEventProducer {
     @Value("${custom-kafka.delete-topic}")
     private String deleteTopic;
 
-    private final KafkaTemplate<String, CustomerDto> kafkaTemplate;
+    private final KafkaTemplate<String, CustomerCreateRequestDto> kafkaTemplate;
 
-    public void sendMessageToCreateCustomer(CustomerDto dto)
+    public void sendMessageToCreateCustomer(CustomerCreateRequestDto dto)
     {
         log.info("Producer--> CustomerCreate:: {}",dto);
-        Message<CustomerDto> message = MessageBuilder
+        Message<CustomerCreateRequestDto> message = MessageBuilder
                         .withPayload(dto)
                         .setHeader(KafkaHeaders.TOPIC, createTopic)
                         .build();
         kafkaTemplate.send(message);
     }
 
-    public void sendMessageToDeleteCustomer(CustomerDto dto)
+    public void sendMessageToDeleteCustomer(CustomerCreateRequestDto dto)
     {
-        log.info("Producer--> CustomerDelete:: {}", dto);
-        Message<CustomerDto> message = MessageBuilder
-                .withPayload(dto)
-                .setHeader(KafkaHeaders.TOPIC, deleteTopic)
-                .build();
-        kafkaTemplate.send(message);
+//        log.info("Producer--> CustomerDelete:: {}", dto);
+//        Message<CustomerCreateRequestDto> message = MessageBuilder
+//                .withPayload(dto)
+//                .setHeader(KafkaHeaders.TOPIC, deleteTopic)
+//                .build();
+//        kafkaTemplate.send(message);
     }
 
 }
