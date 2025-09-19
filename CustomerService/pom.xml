@@ -10,7 +10,8 @@
 	</parent>
 	<groupId>com.gohul</groupId>
 	<artifactId>CustomerService</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>v1</version>
+    <packaging>jar</packaging>
 	<name>CustomerService</name>
 	<description>Spring Boot project for customer management and operations</description>
 	<url/>
@@ -93,11 +94,30 @@
 	</dependencies>
 
 	<build>
+        <finalName>customer-service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
 			</plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.4.6</version>
+                <configuration>
+                    <to>
+                        <image>kpgohul/${project.artifactId}:${project.version}</image>
+                    </to>
+                </configuration>
+            </plugin>
 		</plugins>
 	</build>
 

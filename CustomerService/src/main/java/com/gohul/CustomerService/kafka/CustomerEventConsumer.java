@@ -1,6 +1,6 @@
 package com.gohul.CustomerService.kafka;
 
-import com.gohul.CustomerService.dto.CustomerDto;
+import com.gohul.CustomerService.dto.CustomerCreateRequestDto;
 import com.gohul.CustomerService.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +20,17 @@ public class CustomerEventConsumer {
     private final CustomerService service;
 
     @KafkaListener(topics = "create-event", groupId = "customer-group")
-    public void consumeCustomerCreate(CustomerDto dto)
+    public void consumeCustomerCreate(CustomerCreateRequestDto dto)
     {
         log.info("Consumer --> CustomerCreate:: {} ",dto);
         service.createCustomer(dto);
     }
 
     @KafkaListener(topics = "delete-event", groupId = "customer-group")
-    public void consumeCustomerDelete(CustomerDto dto)
+    public void consumeCustomerDelete(CustomerCreateRequestDto dto)
     {
-        log.info("Consumer --> CustomerDelete:: {}", dto);
-        service.deleteCustomer(dto.getEmail());
+//        log.info("Consumer --> CustomerDelete:: {}", dto);
+//        service.deleteCustomer(dto.getEmail());
     }
 
 

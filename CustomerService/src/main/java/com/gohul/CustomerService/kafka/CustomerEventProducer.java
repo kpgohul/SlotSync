@@ -1,6 +1,6 @@
 package com.gohul.CustomerService.kafka;
 
-import com.gohul.CustomerService.dto.CustomerDto;
+import com.gohul.CustomerService.dto.CustomerSyncUpdateResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,12 +17,12 @@ public class CustomerEventProducer {
 
     @Value("${custom-kafka.verify-topic}")
     private String verifyTopic;
-    private final KafkaTemplate<String, CustomerDto> kafkaTemplate;
+    private final KafkaTemplate<String, CustomerSyncUpdateResponseDto> kafkaTemplate;
 
-    public void sendMessageConfirmCustomer(CustomerDto dto)
+    public void sendMessageConfirmCustomer(CustomerSyncUpdateResponseDto dto)
     {
         log.info("Producer--> CustomerCreate:: {}",dto);
-        Message<CustomerDto> message = MessageBuilder.withPayload(dto)
+        Message<CustomerSyncUpdateResponseDto> message = MessageBuilder.withPayload(dto)
                 .setHeader(KafkaHeaders.TOPIC, verifyTopic)
                 .build();
         kafkaTemplate.send(message);

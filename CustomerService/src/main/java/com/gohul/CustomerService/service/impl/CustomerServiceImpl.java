@@ -1,7 +1,11 @@
 package com.gohul.CustomerService.service.impl;
 
+import com.gohul.CustomerService.constant.SyncStatus;
+import com.gohul.CustomerService.dto.CustomerCreateRequestDto;
 import com.gohul.CustomerService.dto.CustomerDto;
+import com.gohul.CustomerService.dto.CustomerSyncUpdateResponseDto;
 import com.gohul.CustomerService.exception.ResourceAlreadyExistException;
+import com.gohul.CustomerService.kafka.CustomerEventProducer;
 import com.gohul.CustomerService.model.Customer;
 import com.gohul.CustomerService.repo.CustomerRepo;
 import com.gohul.CustomerService.service.CustomerService;
@@ -15,25 +19,27 @@ import java.util.Optional;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepo repo;
+    private final CustomerEventProducer producer;
 
     @Override
-    public void createCustomer(CustomerDto dto) {
+    public void createCustomer(CustomerCreateRequestDto dto) {
         Optional<Customer> past = repo.findByEmail(dto.getEmail());
         if(past.isEmpty()) throw new ResourceAlreadyExistException("Customer", "Email", dto.getEmail());
         Customer newOne = Customer.builder()
                             .name(dto.getName())
                             .email(dto.getEmail())
-                            .age(dto.getAge())
-                            .gender(dto.getGender())
                             .build();
-        repo.save(newOne);
+        Customer customer = repo.save(newOne);
+        producer.sendMessageConfirmCustomer(CustomerSyncUpdateResponseDto.builder()
+                        .email(customer.getEmail())
+                        .id(customer.getId())
+                        .syncStatus(SyncStatus.SYNCED)
+                .build());
     }
 
     @Override
     public void deleteCustomer(String email) {
-        Optional<Customer> past = repo.findByEmail(email);
-        if(past.isEmpty()) throw new ResourceAlreadyExistException("Customer", "Email", email);
-        repo.deleteByEmail(email);
+
     }
 
     @Override
