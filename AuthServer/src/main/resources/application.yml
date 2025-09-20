@@ -12,11 +12,11 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: never
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -24,24 +24,22 @@ spring:
     show-sql: true
 
   kafka:
-    bootstrap-servers: localhost:9092
     admin:
       auto-create: true
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    bootstrap-servers: localhost:9092
     consumer:
-      group-id: customer-group
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: "*"
+        spring.json.trusted.packages: "com.gohul"
 
-custom-kafka:
-  create-topic: create-event
-  verify-topic: verify-event
-  delete-topic: delete-event
+custom:
+  kafka:
+    create-group: create-id
+    create-topic: create-event
+    verify-group: verify-id
+    verify-topic: verify-event
+    delete-group: delete-id
+    delete-topic: delete-event
+
 
 custom-authority:
   default-customer-role: USER

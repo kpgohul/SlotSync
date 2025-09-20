@@ -2,11 +2,15 @@ package com.gohul.AuthServer.dto;
 
 import com.gohul.AuthServer.constant.SyncStatus;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerCreateRequestDto {
 
     @NotBlank(message = "Email is required.")
