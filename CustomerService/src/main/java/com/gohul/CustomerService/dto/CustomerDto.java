@@ -2,7 +2,15 @@ package com.gohul.CustomerService.dto;
 
 import com.gohul.CustomerService.constant.GenderType;
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CustomerDto {
 
     private Long id;

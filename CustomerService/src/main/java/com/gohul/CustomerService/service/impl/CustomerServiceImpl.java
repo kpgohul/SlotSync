@@ -24,7 +24,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public void createCustomer(CustomerCreateRequestDto dto) {
         Optional<Customer> past = repo.findByEmail(dto.getEmail());
-        if(past.isEmpty()) throw new ResourceAlreadyExistException("Customer", "Email", dto.getEmail());
+        if(past.isPresent()) throw new ResourceAlreadyExistException("Customer", "Email", dto.getEmail());
         Customer newOne = Customer.builder()
                             .name(dto.getName())
                             .email(dto.getEmail())
