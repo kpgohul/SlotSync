@@ -1,6 +1,7 @@
 package com.gohul.AuthServer.config;
 
-import com.gohul.AuthServer.model.MyUserDetails;
+import com.gohul.AuthServer.entity.MyUserDetails;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -19,13 +20,16 @@ public class MyTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingConte
 
         var principal = context.getPrincipal();
 
+
         if(context.getTokenType().equals(OAuth2TokenType.ACCESS_TOKEN)){
 
 
-            if(principal instanceof MyUserDetails userDetails)
-            {
-                context.getClaims().claim("user_id", userDetails.getId());
-                context.getClaims().claim("user_email", userDetails.getEmail());
+            if(principal instanceof UsernamePasswordAuthenticationToken token) {
+                Object userObj = token.getPrincipal();
+                if (userObj instanceof MyUserDetails userDetails) {
+                    context.getClaims().claim("customer_id", userDetails.getId());
+                    context.getClaims().claim("customer_email", userDetails.getEmail());
+                }
             }
 
             Set<String> roles = AuthorityUtils.authorityListToSet(context.getPrincipal().getAuthorities())
@@ -38,11 +42,12 @@ public class MyTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingConte
         }
         else if("id_token".equals(context.getTokenType().getValue()))
         {
-            if(principal instanceof MyUserDetails userDetails)
-            {
-                context.getClaims().claim("user_id", userDetails.getId());
-                if(context.getAuthorizedScopes().contains("email"))
-                    context.getClaims().claim("user_email", userDetails.getEmail());
+            if(principal instanceof UsernamePasswordAuthenticationToken token) {
+                Object userObj = token.getPrincipal();
+                if (userObj instanceof MyUserDetails userDetails) {
+                    context.getClaims().claim("customer_id", userDetails.getId());
+                    context.getClaims().claim("customer_email", userDetails.getEmail());
+                }
             }
         }
 

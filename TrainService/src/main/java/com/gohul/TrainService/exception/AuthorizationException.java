@@ -1,4 +1,4 @@
-package com.gohul.CustomerService.exception;
+package com.gohul.TrainService.exception;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
