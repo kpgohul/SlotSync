@@ -1,6 +1,6 @@
 package com.gohul.CustomerService.repo;
 
-import com.gohul.CustomerService.model.Customer;
+import com.gohul.CustomerService.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

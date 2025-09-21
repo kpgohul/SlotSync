@@ -1,4 +1,4 @@
-package com.gohul.AuthServer.model;
+package com.gohul.AuthServer.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

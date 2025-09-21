@@ -6,7 +6,7 @@ import com.gohul.CustomerService.dto.CustomerDto;
 import com.gohul.CustomerService.dto.CustomerSyncUpdateResponseDto;
 import com.gohul.CustomerService.exception.ResourceAlreadyExistException;
 import com.gohul.CustomerService.kafka.CustomerEventProducer;
-import com.gohul.CustomerService.model.Customer;
+import com.gohul.CustomerService.entity.Customer;
 import com.gohul.CustomerService.repo.CustomerRepo;
 import com.gohul.CustomerService.service.CustomerService;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,6 @@
 package com.gohul.AuthServer.repo;
 
-import com.gohul.AuthServer.model.Customer;
+import com.gohul.AuthServer.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
