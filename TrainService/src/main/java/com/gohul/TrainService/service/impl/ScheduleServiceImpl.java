@@ -1,4 +1,4 @@
-package service.impl;
+package com.gohul.TrainService.service.impl;
 
 import com.gohul.TrainService.dto.request.ScheduleCreateReqDto;
 import com.gohul.TrainService.entity.Schedule;
@@ -6,12 +6,10 @@ import com.gohul.TrainService.entity.Train;
 import com.gohul.TrainService.exception.ResourceAlreadyExistException;
 import com.gohul.TrainService.exception.ResourceNotFoundException;
 import com.gohul.TrainService.repo.ScheduleRepo;
-import lombok.Builder;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import service.ScheduleService;
-import service.TrainService;
+import com.gohul.TrainService.service.ScheduleService;
+import com.gohul.TrainService.service.TrainService;
 
 import java.time.LocalDateTime;
 import java.util.List;

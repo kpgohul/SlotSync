@@ -1,4 +1,4 @@
-package service;
+package com.gohul.TrainService.service;
 
 import com.gohul.TrainService.dto.request.TrainCreateReqDto;
 import com.gohul.TrainService.dto.request.TrainUpdateReqDto;

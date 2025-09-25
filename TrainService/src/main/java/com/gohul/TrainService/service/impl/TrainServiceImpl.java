@@ -1,4 +1,4 @@
-package service.impl;
+package com.gohul.TrainService.service.impl;
 
 import com.gohul.TrainService.dto.request.TrainCreateReqDto;
 import com.gohul.TrainService.dto.request.TrainUpdateReqDto;
@@ -8,7 +8,7 @@ import com.gohul.TrainService.exception.ResourceNotFoundException;
 import com.gohul.TrainService.repo.TrainRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import service.TrainService;
+import com.gohul.TrainService.service.TrainService;
 
 import java.util.List;
 import java.util.Optional;
