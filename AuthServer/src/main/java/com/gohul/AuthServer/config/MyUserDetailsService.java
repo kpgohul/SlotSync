@@ -1,7 +1,7 @@
 package com.gohul.AuthServer.config;
 
-import com.gohul.AuthServer.model.Customer;
-import com.gohul.AuthServer.model.MyUserDetails;
+import com.gohul.AuthServer.entity.Customer;
+import com.gohul.AuthServer.entity.MyUserDetails;
 import com.gohul.AuthServer.repo.CustomerRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

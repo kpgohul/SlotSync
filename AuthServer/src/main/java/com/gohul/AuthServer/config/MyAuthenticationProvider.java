@@ -24,7 +24,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         String rawPass = authentication.getCredentials().toString();
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         if(encoder.matches(rawPass, userDetails.getPassword()))
-            return new UsernamePasswordAuthenticationToken(email, null, userDetails.getAuthorities());
+            return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         else
             throw new BadCredentialsException("Email or Password is incorrect");
     }

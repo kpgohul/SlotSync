@@ -15,19 +15,19 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class CustomerEventProducer {
 
-    @Value("${custom-kafka.create-topic}")
+    @Value("${custom.kafka.create-topic}")
     private String createTopic;
-    @Value("${custom-kafka.delete-topic}")
+    @Value("${custom.kafka.delete-topic}")
     private String deleteTopic;
 
-    private final KafkaTemplate<String, CustomerCreateRequestDto> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void sendMessageToCreateCustomer(CustomerCreateRequestDto dto)
     {
-        log.info("Producer--> CustomerCreate:: {}",dto);
+        log.info("Producer  --> CustomerCreate:: {}", dto);
         Message<CustomerCreateRequestDto> message = MessageBuilder
-                        .withPayload(dto)
-                        .setHeader(KafkaHeaders.TOPIC, createTopic)
+                .withPayload(dto)
+                .setHeader(KafkaHeaders.TOPIC, createTopic)
                         .build();
         kafkaTemplate.send(message);
     }

@@ -9,6 +9,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
@@ -19,19 +20,23 @@ public class CustomerEventConsumer {
 
     private final CustomerService service;
 
-    @KafkaListener(topics = "create-event", groupId = "customer-group")
+    @KafkaListener(
+            topics = "create-event",
+            groupId = "create-id",
+            containerFactory = "createCustomerListener"
+    )
     public void consumeCustomerCreate(CustomerCreateRequestDto dto)
     {
         log.info("Consumer --> CustomerCreate:: {} ",dto);
         service.createCustomer(dto);
     }
 
-    @KafkaListener(topics = "delete-event", groupId = "customer-group")
-    public void consumeCustomerDelete(CustomerCreateRequestDto dto)
-    {
-//        log.info("Consumer --> CustomerDelete:: {}", dto);
-//        service.deleteCustomer(dto.getEmail());
-    }
+//    @KafkaListener(topics = "delete-event", groupId = "customer-group")
+//    public void consumeCustomerDelete(CustomerCreateRequestDto dto)
+//    {
+////        log.info("Consumer --> CustomerDelete:: {}", dto);
+////        service.deleteCustomer(dto.getEmail());
+//    }
 
 
 }
