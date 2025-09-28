@@ -1,34 +1,33 @@
 package com.gohul.TrainService.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
+import jakarta.persistence.*;
+import lombok.*;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-
+@Data
 @Entity
-@Table(name = "station")
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
-public class Station {
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class Station extends BaseEntity{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    @Column(nullable = false, unique = true)
     private String name;
+    @Column(nullable = false)
     private String address;
-    private String district;
-    private String state;
+    @Column(nullable = false)
+    private String city;
+    @Column(nullable = false, unique = true)
     private Integer zipcode;
+    @Column(nullable = false)
+    private String state;
+    @Column(nullable = false)
     private String country;
-    private Instant createdAt;
-    private Instant updatedAt;
-    private String createdBy;
-    private String updatedBy;
+
+    @OneToOne(mappedBy = "station", cascade = CascadeType.ALL)
+    private StationMapping stationMapping;
 
 }

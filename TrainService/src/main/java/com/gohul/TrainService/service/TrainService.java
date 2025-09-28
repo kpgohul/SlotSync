@@ -1,22 +1,20 @@
 package com.gohul.TrainService.service;
 
-import com.gohul.TrainService.dto.request.TrainCreateReqDto;
-import com.gohul.TrainService.dto.request.TrainUpdateReqDto;
-import com.gohul.TrainService.entity.Train;
+import com.gohul.TrainService.dto.request.TrainCreateRequest;
+import com.gohul.TrainService.dto.request.TrainUpdateRequest;
+import com.gohul.TrainService.dto.response.TrainResponse;
 
 import java.util.List;
 
 public interface TrainService {
 
-    void addTrain(TrainCreateReqDto reqDto);
-
-    void updateRoutesForExistingTrain(TrainUpdateReqDto reqDto);
-
+    void createTrain(TrainCreateRequest request);
+    void updateTrain(TrainUpdateRequest request);
     void deleteTrain(Long id);
-
-    Train getTrainById(Long id);
-
-    List<Train> getTrainListBySourceStationAndDestinationStation(String sourceStation, String destinationStation);
+    TrainResponse getTrainById(Long id);
+    TrainResponse getTrainByNumber(String number);
+    List<TrainResponse> getTrainsByName(int page, int limit, String sort, String name);
+    List<TrainResponse> getAllTheTrains(int page, int limit, String sort);
 
 
 }

@@ -1,31 +1,33 @@
 package com.gohul.TrainService.entity;
 
+import com.gohul.TrainService.constant.SeatStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.*;
 
-@Entity
-@EntityListeners(AuditingEntityListener.class)
 @Data
+@Entity
+@Table(
+        name = "seat",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"schedule_id", "number"})
+        }
+)
+@Builder
+
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Seat {
+@EqualsAndHashCode(callSuper = true)
+public class Seat extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(unique = true, nullable = false)
+    private Long scheduleId;
     @Column(nullable = false)
-    private Integer seatNumber;
-    private boolean isBooked = false;
+    private Integer number;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SeatStatus status;
 
-    @ManyToOne(
-            fetch = FetchType.EAGER,
-            targetEntity = Schedule.class
-    )
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
 }

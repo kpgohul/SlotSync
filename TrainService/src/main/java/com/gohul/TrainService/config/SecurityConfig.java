@@ -1,6 +1,7 @@
 package com.gohul.TrainService.config;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gohul.TrainService.exception.AuthenticationException;
 import com.gohul.TrainService.exception.AuthorizationException;
 import org.springframework.context.annotation.Bean;
@@ -34,5 +35,10 @@ public class SecurityConfig {
         JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
         converter.setJwtGrantedAuthoritiesConverter(new RoleConverter());
         return converter;
+    }
+
+    @Bean
+    public ObjectMapper objectMapper(){
+        return new ObjectMapper();
     }
 }
