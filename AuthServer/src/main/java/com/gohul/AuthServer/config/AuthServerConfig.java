@@ -125,7 +125,7 @@ public class AuthServerConfig {
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
                 .scope(OidcScopes.OPENID).scope(OidcScopes.EMAIL)
                 .tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
-                        .accessTokenTimeToLive(Duration.ofMinutes(5)).refreshTokenTimeToLive(Duration.ofHours(5))
+                        .accessTokenTimeToLive(Duration.ofDays(1)).refreshTokenTimeToLive(Duration.ofDays(30))
                         .reuseRefreshTokens(false).build())
                 .clientSettings(ClientSettings.builder().requireProofKey(true)
                         .requireAuthorizationConsent(true).build())

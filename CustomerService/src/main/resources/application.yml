@@ -16,9 +16,9 @@ spring:
     hikari:
       maximum-pool-size: 5
 
-    sql:
-      init:
-        mode: never
+  sql:
+    init:
+      mode: never
 
   jpa:
     hibernate:
@@ -27,6 +27,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        jdbc.time_zone: UTC
     show-sql: true
 
   kafka:
