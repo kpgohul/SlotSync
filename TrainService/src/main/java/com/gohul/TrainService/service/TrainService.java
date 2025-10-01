@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TrainService {
 
-    void createTrain(TrainCreateRequest request);
+    Long createTrain(TrainCreateRequest request);
     void updateTrain(TrainUpdateRequest request);
     void deleteTrain(Long id);
     TrainResponse getTrainById(Long id);

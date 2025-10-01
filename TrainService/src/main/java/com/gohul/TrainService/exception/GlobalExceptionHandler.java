@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false),
                 HttpStatus.NOT_FOUND.toString(),
                 e.getMessage(),
-                LocalDateTime.now()
+                Instant.now()
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(dto);
@@ -39,19 +40,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false),
                 HttpStatus.CONFLICT.toString(),
                 e.getMessage(),
-                LocalDateTime.now()
+                Instant.now()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(dto);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleGlobalException(ResourceAlreadyExistException e, WebRequest request) {
+    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception e, WebRequest request) {
         ErrorResponseDto dto =new ErrorResponseDto(
                 request.getDescription(false),
                 HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
                 e.getMessage(),
-                LocalDateTime.now()
+                Instant.now()
         );
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(dto);

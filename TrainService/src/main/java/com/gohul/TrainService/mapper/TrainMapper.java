@@ -11,6 +11,7 @@ public class TrainMapper {
 
     public TrainResponse toTrainResponse(Train train){
         return TrainResponse.builder()
+                .id(train.getId())
                 .name(train.getName())
                 .number(train.getNumber())
                 .type(train.getType())

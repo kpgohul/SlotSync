@@ -10,6 +10,7 @@ import com.gohul.TrainService.mapper.TrainMapper;
 import com.gohul.TrainService.repo.TrainRepo;
 import com.gohul.TrainService.service.TrainService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,18 +22,20 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class TrainServiceImpl implements TrainService {
 
     private final TrainRepo repo;
     private final TrainMapper mapper;
 
     @Override
-    public void createTrain(TrainCreateRequest request) {
+    public Long createTrain(TrainCreateRequest request) {
 
         Optional<Train> trainOption = repo.findByNumber(request.getNumber());
         if(trainOption.isPresent())
             throw new ResourceAlreadyExistException("Train", "Number", request.getNumber());
-        repo.save(mapper.toTrain(request));
+        Train train = repo.save(mapper.toTrain(request));
+        return train.getId();
 
     }
 
@@ -89,9 +92,12 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public List<TrainResponse> getAllTheTrains(int page, int limit, String sort) {
 
+        log.info("Request for the page:: {} with limit:: {} and sortType:: {}", page,limit,sort);
         Sort.Direction direction = sort.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(direction, "name"));
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(direction, "createdAt"));
         Page<Train> trainPage = repo.findAll(pageable);
+        log.info("Total records in train DB:: {}",trainPage.getTotalPages());
+        log.info("No of train records:: {}", trainPage.getTotalElements());
         return trainPage.stream()
                 .map(mapper::toTrainResponse)
                 .toList();

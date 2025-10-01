@@ -9,26 +9,31 @@ spring:
           jwk-set-uri: http://localhost:8090/oauth2/jwks
 
   datasource:
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:TrainDetailsDB}
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:trainDetailsDB}
     username: kprahul143
     password: kprahul143
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 5
 
-    sql:
-      init:
-        mode: never
+  jackson:
+    date-format: yyyy-MM-dd'T'HH:mm:ss'Z'
+    time-zone: UTC
 
-    jpa:
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
       hibernate:
-        ddl-auto: update
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
-          format_sql: true
-          jdbc.time_zone: UTC
-      show-sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          time_zone: UTC
+    show-sql: true
 
 logging:
   level:

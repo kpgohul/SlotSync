@@ -30,30 +30,26 @@ public class StationServiceImpl implements StationService {
 
 
     @Override
-    public void createStation(StationCreateRequest request) {
+    public Long createStation(StationCreateRequest request) {
 
         Optional<Station> optionalStation = repo.findByName(request.getName());
         if(optionalStation.isPresent())
             throw new ResourceAlreadyExistException("Station", "Name", request.getName());
-        Station station = mapper.toStation(request);
-        StationMapping mapping = mapper.toStationMapping(station, request.getNearbyStationList());
-        station.setStationMapping(mapping);
-        repo.save(station);
+        Station station = mapper.toStation(request, new Station());
+        return repo.save(station).getId();
 
     }
 
-    @Override
-    public void updateStation(StationUpdateRequest request) {
+        @Override
+        public void updateStation(StationUpdateRequest request) {
 
-        Optional<Station> optionalStation = repo.findById(request.getId());
-        if(optionalStation.isEmpty())
-            throw new ResourceNotFoundException("Station", "ID", request.getId().toString());
-        Station station = mapper.toStation(request);
-        StationMapping mapping = mapper.toStationMapping(station, request.getNearbyStationList());
-        station.setStationMapping(mapping);
-        repo.save(station);
+            Optional<Station> optionalStation = repo.findById(request.getId());
+            if(optionalStation.isEmpty())
+                throw new ResourceNotFoundException("Station", "ID", request.getId().toString());
+            Station station = mapper.toStation(request, optionalStation.get());
+            repo.save(station);
 
-    }
+        }
 
     @Override
     public void deleteStationById(Long id) {
@@ -82,11 +78,11 @@ public class StationServiceImpl implements StationService {
     public List<StationResponse> getStationByName(int page, int limit, String sort, String name) {
 
         Sort.Direction direction = sort.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(direction, "name"));
-        Optional<List<Station>> optionalStations = repo.findByNameContainingIgnoreCase(name, pageable);
-        return optionalStations.map(stations -> stations.stream()
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(direction, "createdAt"));
+        Page<Station> stations = repo.findByCityContainingIgnoreCase(name, pageable);
+        return stations.stream()
                 .map(mapper::toStationResponse)
-                .toList()).orElseGet(List::of);
+                .toList();
 
     }
 

@@ -1,10 +1,12 @@
 package com.gohul.TrainService.entity;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
+import com.vladmihalcea.hibernate.type.array.LongArrayType;
+import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
@@ -16,11 +18,13 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Route extends BaseEntity{
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private Long sourceStationId;
-    private Long destinationId;
-    @ElementCollection
-    @Column(columnDefinition = "text[]")
-    private List<Long> path;
+    private Long destinationStationId;
+    @JdbcTypeCode(SqlTypes.ARRAY)
+    @Column(columnDefinition = "bigint[]")
+    private Long[] path;
 
 }

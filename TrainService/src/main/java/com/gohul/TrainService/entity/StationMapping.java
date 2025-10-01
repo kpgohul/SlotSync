@@ -3,12 +3,12 @@ package com.gohul.TrainService.entity;
 import com.gohul.TrainService.converter.NearByStationConverter;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 
@@ -22,12 +22,16 @@ import java.util.List;
 public class StationMapping extends BaseEntity{
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
+
     @OneToOne
-    @JoinColumn(name = "station_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "station_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Station station;
 
+//    @JdbcTypeCode(SqlTypes.JSON)
+    @Type(JsonBinaryType.class)
     @Column(columnDefinition = "jsonb")
-    @Convert(converter = NearByStationConverter.class)
     private List<NearbyStation> nearbyStationList;
 
 }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -37,97 +38,122 @@ public class ScheduleServiceImpl implements ScheduleService {
     private final SeatService seatService;
 
     @Override
-    public void createSchedule(ScheduleCreateRequest request) {
+    public Long createSchedule(ScheduleCreateRequest request) {
 
         TrainResponse train = trainService.getTrainById(request.getTrainId());
-        if(train == null) throw new ResourceNotFoundException("Train", "ID", request.getTrainId().toString());
+        if (train == null)
+            throw new ResourceNotFoundException("Train", "ID", request.getTrainId().toString());
+
         RouteResponse route = routeService.getRouteById(request.getRouteId());
-        if(route == null) throw new ResourceNotFoundException("Route", "ID", request.getRouteId().toString());
+        if (route == null)
+            throw new ResourceNotFoundException("Route", "ID", request.getRouteId().toString());
 
-        Instant startTime = request.getArrivalTime();
-        Instant endTime = request.getArrivalTime();
-
+        Instant currentTime = request.getArrivalTime(); // start from arrivalTime
         int speedKmph = train.getType().getAverageSpeed();
+        Long[] path = route.getPath();
 
-        List<Long> path = route.getPath();
+        for (int i = 0; i < path.length - 1; i++) {
+            StationResponse currentStation = stationService.getStationById(path[i]);
+            List<NearbyStation> nearbyStations = currentStation.getNearbyStationList();
 
-        for(int i=0; i<path.size() - 1; i++){
-            StationResponse res = stationService.getStationById(path.get(i));
-            List<NearbyStation> stations = res.getNearbyStationList();
-            for(NearbyStation station: stations){
-                if(station.getStationId().equals(path.get(i + 1))){
-                    int distanceKm = station.getDistance();
-                    double timeInHours = (double) distanceKm / speedKmph;
-                    long timeInSeconds = (long) (timeInHours * 3600);
-                    endTime = endTime.plusSeconds(timeInSeconds);
-
+            boolean found = false;
+            for (NearbyStation nearby : nearbyStations) {
+                if (nearby.getStationId().equals(path[i + 1])) {
+                    double distanceKm = nearby.getDistance();
+                    double timeHours = distanceKm / speedKmph;
+                    long timeSeconds = (long) (timeHours * 3600);
+                    currentTime = currentTime.plusSeconds(timeSeconds);
+                    found = true;
+                    break;
                 }
+            }
+            if (!found) {
+                throw new IllegalArgumentException(
+                        "No nearby connection found between station " + path[i] + " and " + path[i + 1]
+                );
             }
         }
 
-        List<Schedule> scheduleList = repo.findConflictingSchedules(train.getId(), startTime, endTime);
-        if(!scheduleList.isEmpty()){
+        Instant finalDepartureTime = currentTime;
+
+        List<Schedule> conflicts = repo.findConflictingSchedules(train.getId(), request.getArrivalTime(), finalDepartureTime);
+        if (!conflicts.isEmpty()) {
             throw new ResourceAlreadyExistException(
                     "Schedule", "ArrivalTime and DepartureTime",
-                    request.getArrivalTime()+" and "+request.getDepartureTime()
+                    request.getArrivalTime() + " and " + finalDepartureTime
             );
         }
 
         Schedule schedule = mapper.toSchedule(request, new Schedule());
-        Schedule savedSchedule = repo.save(schedule);
-        seatService.createSeats(request.getTotalSeats(), savedSchedule.getId());
+//        schedule.setDepartureTime(finalDepartureTime);
 
+        Schedule saved = repo.save(schedule);
+        seatService.createSeats(request.getTotalSeats(), saved.getId());
+
+        return saved.getId();
     }
 
     @Override
     public void updateSchedule(ScheduleUpdateRequest request) {
 
         Schedule schedule = repo.findById(request.getId())
-                .orElseThrow( () -> new ResourceNotFoundException("Schedule", "ID", request.getId().toString()));
+                .orElseThrow(() -> new ResourceNotFoundException("Schedule", "ID", request.getId().toString()));
 
         TrainResponse train = trainService.getTrainById(request.getTrainId());
-        if(train == null) throw new ResourceNotFoundException("Train", "ID", request.getTrainId().toString());
+        if (train == null)
+            throw new ResourceNotFoundException("Train", "ID", request.getTrainId().toString());
+
         RouteResponse route = routeService.getRouteById(request.getRouteId());
-        if(route == null) throw new ResourceNotFoundException("Route", "ID", request.getRouteId().toString());
+        if (route == null)
+            throw new ResourceNotFoundException("Route", "ID", request.getRouteId().toString());
 
-        Instant startTime = request.getArrivalTime();
-        Instant endTime = request.getArrivalTime();
-
+        Instant currentTime = request.getArrivalTime(); // start from arrivalTime
         int speedKmph = train.getType().getAverageSpeed();
+        Long[] path = route.getPath();
 
-        List<Long> path = route.getPath();
+        for (int i = 0; i < path.length - 1; i++) {
+            StationResponse currentStation = stationService.getStationById(path[i]);
+            List<NearbyStation> nearbyStations = currentStation.getNearbyStationList();
 
-        for(int i=0; i<path.size() - 1; i++){
-            StationResponse res = stationService.getStationById(path.get(i));
-            List<NearbyStation> stations = res.getNearbyStationList();
-            for(NearbyStation station: stations){
-                if(station.getStationId().equals(path.get(i + 1))){
-                    int distanceKm = station.getDistance();
-                    double timeInHours = (double) distanceKm / speedKmph;
-                    long timeInSeconds = (long) (timeInHours * 3600);
-                    endTime = endTime.plusSeconds(timeInSeconds);
-
+            boolean found = false;
+            for (NearbyStation nearby : nearbyStations) {
+                if (nearby.getStationId().equals(path[i + 1])) {
+                    double distanceKm = nearby.getDistance();
+                    double timeHours = distanceKm / speedKmph;
+                    long timeSeconds = (long) (timeHours * 3600);
+                    currentTime = currentTime.plusSeconds(timeSeconds);
+                    found = true;
+                    break;
                 }
+            }
+            if (!found) {
+                throw new IllegalArgumentException(
+                        "No nearby connection found between station " + path[i] + " and " + path[i + 1]
+                );
             }
         }
 
-        List<Schedule> scheduleList = repo.findConflictingSchedules(train.getId(), startTime, endTime);
-        if(!scheduleList.isEmpty()){
+        Instant finalDepartureTime = currentTime;
+
+        List<Schedule> conflicts = repo.findConflictingSchedules(train.getId(), request.getArrivalTime(), finalDepartureTime);
+        if (!conflicts.isEmpty()) {
             throw new ResourceAlreadyExistException(
                     "Schedule", "ArrivalTime and DepartureTime",
-                    request.getArrivalTime()+" and "+request.getDepartureTime()
+                    request.getArrivalTime() + " and " + finalDepartureTime
             );
         }
+
         boolean isSeatsToBeUpdated = !schedule.getTotalSeats().equals(request.getTotalSeats());
         mapper.toSchedule(request, schedule);
+//        schedule.setDepartureTime(finalDepartureTime); // update departure time after recalculation
         repo.save(schedule);
 
-        if(isSeatsToBeUpdated){
+        if (isSeatsToBeUpdated) {
             seatService.deleteSeatsByScheduleId(request.getId());
             seatService.createSeats(request.getTotalSeats(), request.getId());
         }
-
     }
+
 
     @Override
     public void deleteSchedule(Long id) {

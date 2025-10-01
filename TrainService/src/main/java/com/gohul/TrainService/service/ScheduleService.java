@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    void createSchedule(ScheduleCreateRequest request);
+    Long createSchedule(ScheduleCreateRequest request);
     void updateSchedule(ScheduleUpdateRequest request);
     void deleteSchedule(Long id);
     ScheduleResponse getScheduleById(Long id);

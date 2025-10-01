@@ -5,6 +5,7 @@ import com.gohul.TrainService.dto.request.SeatCreateRequest;
 import com.gohul.TrainService.dto.request.SeatUpdateRequest;
 import com.gohul.TrainService.dto.response.SeatResponse;
 import com.gohul.TrainService.entity.Seat;
+import com.gohul.TrainService.entity.composite.SeatId;
 import com.gohul.TrainService.exception.ResourceAlreadyExistException;
 import com.gohul.TrainService.exception.ResourceNotFoundException;
 import com.gohul.TrainService.mapper.SeatMapper;
@@ -31,24 +32,24 @@ public class SeatServiceImpl implements SeatService {
     @Override
     public void createSeats(int numOfSeats, Long scheduleId) {
 
-        long scheduleIdCount = repo.countByScheduleId(scheduleId);
+        Long scheduleIdCount = repo.countByIdScheduleId(scheduleId);
         if(scheduleIdCount > 0)
             throw new ResourceAlreadyExistException("Seat", "ScheduleID", scheduleId.toString());
         List<Seat> seats = IntStream.range(0, numOfSeats)
                 .mapToObj( i ->
                       Seat.builder()
-                              .scheduleId(scheduleId)
-                              .number(i+1)
+                              .id(new SeatId(scheduleId, i + 1))
                               .status(SeatStatus.AVAILABLE)
                               .build()
                 ).toList();
+        repo.saveAll(seats);
 
     }
 
     @Override
     public void createSeat(SeatCreateRequest request) {
 
-        long scheduleIdCount = repo.countByScheduleId(request.getScheduleId());
+        long scheduleIdCount = repo.countByIdScheduleId(request.getScheduleId());
         if(scheduleIdCount == 0)
             throw new ResourceNotFoundException("Seat", "ScheduleID",request.getScheduleId().toString());
         // TODO - need to handle the seat numbers count
@@ -60,50 +61,50 @@ public class SeatServiceImpl implements SeatService {
     @Override
     public void updateSeat(SeatUpdateRequest request) {
 
-        Seat seat = repo.findById(request.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Seat", "ID", request.getId().toString()));
-        seat.setStatus(request.getStatus());
-        repo.save(seat);
+//        Seat seat = repo.findById(request.getId())
+//                .orElseThrow(() -> new ResourceNotFoundException("Seat", "ID", request.getId().toString()));
+//        seat.setStatus(request.getStatus());
+//        repo.save(seat);
 
     }
 
     @Override
     public void deleteSeat(Long id) {
 
-        Seat seat = repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Seat", "ID", id.toString()));
-        if(seat.getStatus().equals(SeatStatus.BOOKED) || seat.getStatus().equals(SeatStatus.PENDING))
-            throw new RuntimeException("Seat cannot be deleted. Current status: " + seat.getStatus());
-        repo.deleteById(id);
+//        Seat seat = repo.findById(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Seat", "ID", id.toString()));
+//        if(seat.getStatus().equals(SeatStatus.BOOKED) || seat.getStatus().equals(SeatStatus.PENDING))
+//            throw new RuntimeException("Seat cannot be deleted. Current status: " + seat.getStatus());
+//        repo.deleteById(id);
 
     }
 
     @Override
     public void deleteSeat(Long scheduleId, Integer seatNumber) {
 
-        Seat seat = repo.findByScheduleIdAndNumber(scheduleId, seatNumber)
+        Seat seat = repo.findByIdScheduleIdAndIdNumber(scheduleId, seatNumber)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Seat", "ScheduleID and SeatNumber",
                         scheduleId.toString() +" and "+seatNumber.toString())
                 );
         if(seat.getStatus().equals(SeatStatus.BOOKED) || seat.getStatus().equals(SeatStatus.PENDING))
             throw new RuntimeException("Seat cannot be deleted. Current status: " + seat.getStatus());
-        repo.deleteById(seat.getId());
+//        repo.deleteById(seat.getId());
 
     }
 
     @Override
     public void deleteSeatsByScheduleId(Long scheduleId) {
-        repo.deletedByScheduleId(scheduleId);
+        repo.deleteByIdScheduleId(scheduleId);
     }
 
     @Override
     public List<SeatResponse> getSeatsByScheduleId(Long scheduleId, int page, int limit, String sort) {
 
         Sort.Direction direction = sort.equalsIgnoreCase("asc") ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Pageable pageable = PageRequest.of(page, limit, Sort.by(direction, "number"));
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(direction, "id.number"));
 
-        Page<Seat> seatPage = repo.findByScheduleId(scheduleId, pageable);
+        Page<Seat> seatPage = repo.findByIdScheduleId(scheduleId, pageable);
 
         return seatPage.stream()
                 .map(mapper::toSeatResponse)

@@ -1,6 +1,8 @@
 package com.gohul.TrainService.entity;
 
 import lombok.*;
+
+import java.time.Instant;
 import java.time.LocalTime;
 
 
@@ -11,7 +13,6 @@ import java.time.LocalTime;
 public class NearbyStation{
 
     private Long stationId;
-    private Integer distance;
-    private LocalTime duration;
+    private Double distance;
 
 }

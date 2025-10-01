@@ -2,13 +2,17 @@ package com.gohul.TrainService.dto.response;
 
 import com.gohul.TrainService.entity.NearbyStation;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StationResponse {
 
     private Long id;

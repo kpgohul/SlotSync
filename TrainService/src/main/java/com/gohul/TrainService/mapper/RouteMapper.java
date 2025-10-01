@@ -13,7 +13,7 @@ public class RouteMapper {
 
         return Route.builder()
                 .sourceStationId(request.getSourceStationId())
-                .destinationId(request.getDestinationStationId())
+                .destinationStationId(request.getDestinationStationId())
                 .path(request.getPath())
                 .build();
 
@@ -24,7 +24,7 @@ public class RouteMapper {
         return Route.builder()
                 .id(request.getId())
                 .sourceStationId(request.getSourceStationId())
-                .destinationId(request.getDestinationStationId())
+                .destinationStationId(request.getDestinationStationId())
                 .path(request.getPath())
                 .build();
 
@@ -33,8 +33,9 @@ public class RouteMapper {
     public RouteResponse toRouteResponse(Route route){
 
         return RouteResponse.builder()
+                .id(route.getId())
                 .sourceStationId(route.getSourceStationId())
-                .destinationStationId(route.getDestinationId())
+                .destinationStationId(route.getDestinationStationId())
                 .path(route.getPath())
                 .build();
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface StationService {
 
-    void createStation(StationCreateRequest request);
+    Long createStation(StationCreateRequest request);
 
     void updateStation(StationUpdateRequest request);
 

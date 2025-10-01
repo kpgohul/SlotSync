@@ -13,44 +13,58 @@ import java.util.List;
 @Component
 public class StationMapper {
 
-    public Station toStation(StationCreateRequest request){
+    public Station toStation(StationCreateRequest request, Station station) {
+        // Set or override station fields
+        station.setName(request.getName());
+        station.setAddress(request.getAddress());
+        station.setCity(request.getCity());
+        station.setZipcode(request.getZipcode());
+        station.setState(request.getState());
+        station.setCountry(request.getCountry());
 
-        return Station.builder()
-                .name(request.getName())
-                .address(request.getAddress())
-                .city(request.getCity())
-                .zipcode(request.getZipcode())
-                .country(request.getCountry())
-                .build();
+        // Handle StationMapping
+        StationMapping mapping = station.getStationMapping();
+        if (mapping == null) {
+            mapping = new StationMapping();
+            mapping.setStation(station);
+            station.setStationMapping(mapping);
+        }
+        mapping.setNearbyStationList(request.getNearbyStationList());
+        mapping.setStation(station); // ensure bidirectional mapping
 
+        return station;
     }
 
-    public Station toStation(StationUpdateRequest request){
 
-        return Station.builder()
-                .id(request.getId())
-                .name(request.getName())
-                .address(request.getAddress())
-                .city(request.getCity())
-                .zipcode(request.getZipcode())
-                .country(request.getCountry())
-                .build();
+    public Station toStation(StationUpdateRequest request, Station station) {
+        // Set or override station fields
+//        station.setId(request.getId()); // Optional, Since u r sending the actual station object
+        station.setName(request.getName());
+        station.setAddress(request.getAddress());
+        station.setCity(request.getCity());
+        station.setZipcode(request.getZipcode());
+        station.setState(request.getState());
+        station.setCountry(request.getCountry());
 
+        // Handle StationMapping
+        StationMapping mapping = station.getStationMapping();
+        if (mapping == null) {
+            mapping = new StationMapping();
+            mapping.setStation(station);
+            station.setStationMapping(mapping);
+        }
+        mapping.setNearbyStationList(request.getNearbyStationList());
+        mapping.setStation(station); // ensure bidirectional mapping
+
+        return station;
     }
 
-    public StationMapping toStationMapping(Station station, List<NearbyStation> nearbyStationList){
-
-        return StationMapping.builder()
-                .station(station)
-                .nearbyStationList(nearbyStationList)
-                .build();
-
-    }
 
     public StationResponse toStationResponse(Station station){
 
         return StationResponse.builder()
                 .id(station.getId())
+                .name(station.getName())
                 .address(station.getAddress())
                 .city(station.getCity())
                 .state(station.getState())
